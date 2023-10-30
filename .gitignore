@@ -1,0 +1,7 @@
+*.pyc
+*.pth
+.vs/
+__pycache__/
+data
+results
+out

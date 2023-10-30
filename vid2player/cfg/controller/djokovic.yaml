@@ -1,0 +1,145 @@
+name: PhysicsMVAEController
+test_name: MVAEControllerVis
+env: 
+  numEnvs: 30720
+  episodeLength: 300
+  envSpacing: 5
+  isFlagrun: False
+  enableDebugVis: False
+  powerScale: 1.0
+  numAMPObsSteps: 10
+  enableHistObs: False
+  enableEarlyTermination: False
+
+  physics:
+    config: tennis_im
+    name: HumanoidSMPLIMMVAE
+    test_name: HumanoidSMPLIMMVAE
+    pretrained_model_cp: results/djokovic_im/models/Djokovic_epoch10000.pth
+    assetFileName: smpl_mesh_humanoid_djokovic.xml
+    substeps: 6
+    num_position_iterations: 2
+    residual_force_scale: 31.85
+    plane_restitution: 0.5
+
+  vid2player:
+    mvae_ver: djokovic
+    player: djokovic
+    grip: semi_western
+    court_min: [-5, -16]
+    court_max: [5, -10]
+    racket_friction: 0.8
+    ball_friction: 0.2
+    restitution: 0.9
+    spin_scale: 5
+
+    reward_weights: {'pos': 0.1, 'ball_pos': 0.9}
+    reward_scales: {'pos': 50, 'phase': 10, 'bounce_pos': 1, 'bounce_time': 0.5}
+    reward_type: return_w_estimate
+    ball_traj_out_x_file: data/ball_traj/ball_traj_out_x.npy
+    ball_traj_out_y_file: data/ball_traj/ball_traj_out_y.npy
+
+    obs_ball_traj_length: 10
+    use_history_ball_obs: False
+    ball_traj_file: data/ball_traj/ball_traj_in.npy
+    use_random_ball_target: continuous
+
+    vae_action_scale: 1.5
+    add_residual_dof: euler
+    residual_dof_scale: 0.4
+    aux_loss_specs: {'dof_res': 0.01}
+    fix_head_orientation: True
+    fix_two_hand_backhand_post: True
+
+    vae_init_conditions: data/vae/vae_init_condition_djokovic_ready.pt
+    reset_reaction_nframes: 70
+    random_walk_in_recovery: True
+    
+sim:
+  none: 0
+
+params:
+  seed: 10
+
+  algo:
+    name: vid2player
+
+  model:
+    name: vid2player
+
+  network:
+    name: vid2player
+    separate: True
+    actor_net_type: 'style_cat1'
+    latent_type: 'sphere'
+
+    space:
+      continuous:
+        mu_activation: None
+        sigma_activation: None
+        mu_init:
+          name: default
+        sigma_init:
+          name: const_initializer
+          val: -2.9
+        fixed_sigma: True
+
+    mlp:
+      units: [1024, 1024, 512]
+      activation: relu
+      d2rl: False
+
+      initializer:
+        name: default
+      regularizer:
+        name: None
+
+    disc:
+      units: [1024, 1024, 512]
+      activation: relu
+
+      initializer:
+        name: default
+
+    enc:
+      units: [1024, 512]
+      activation: relu
+      separate: False
+
+      initializer:
+        name: default
+
+  load_checkpoint: False
+
+  config:
+    name: tennis_v1
+    env_name: rlgpu
+    multi_gpu: False
+    ppo: True
+    mixed_precision: False
+    normalize_input: True
+    normalize_value: True
+    reward_shaper:
+      scale_value: 1
+    normalize_advantage: True
+    gamma: 0.99
+    tau: 0.95
+    learning_rate: 1e-5
+    lr_schedule: constant
+    score_to_win: 20000
+    max_epochs: 5000
+    save_best_after: 50
+    save_frequency: 250
+    print_stats: True
+    entropy_coef: 0.0
+    truncate_grads: True
+    grad_norm: 50.0
+    e_clip: 0.2
+    horizon_length: 32
+    minibatch_size: 16384
+    mini_epochs: 3
+    critic_coef: 5
+    clip_value: False
+    seq_len: 4
+    bounds_loss_coef: 10
+    clip_actions_val: 5.0
