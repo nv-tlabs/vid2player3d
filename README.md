@@ -10,7 +10,7 @@ SIGGRAPH 2023 (best paper honorable mention)
 
 <img src="doc/teaser.png"/>
 
-# The current release provides the implementation of the controller, including the low-level imitation policy, motion embedding and the high-level planning policy, as well as the environment setup in IsaacGym. Unfortunately, the demo can NOT run because the trained models are currently not available due to legal issues. 
+### Note: the current release provides the implementation of the controller, including the low-level imitation policy, motion embedding and the high-level planning policy, as well as the environment setup in IsaacGym. Unfortunately, the demo can NOT run because the trained models are currently not available due to legal issues. 
 
 # Environment setup
 
