@@ -10,7 +10,7 @@ SIGGRAPH 2023 (best paper honorable mention)
 
 <img src="doc/teaser.png"/>
 
-### Note: the current release provides the implementation of the controller, including the low-level imitation policy, motion embedding and the high-level planning policy, as well as the environment setup in IsaacGym. Unfortunately, the demo can NOT run because the trained models are currently not available due to legal issues. 
+### Note: the current release provides the implementation of the hierarchical controller, including the low-level imitation policy, motion embedding and the high-level planning policy, as well as the environment setup in IsaacGym. Unfortunately, the demo can NOT run because the trained models are currently not available due to license issues. 
 
 # Environment setup
 
@@ -44,7 +44,7 @@ Download checkpoints of motion VAE and trained polices into `vid2player3d/result
 
 Download SMPL [models](https://download.is.tue.mpg.de/download.php?domain=smpl&sfile=SMPL_python_v.1.0.0.zip) (male and female models) into `smpl_visualizer/data/smpl` after registering and rename the files as `SMPL_MALE.pkl` and `SMPL_FEMALE.pkl`.
 
-# Test with trained policies
+# Testing with trained models
 ### Single player
 In the single player setting, the player will react to consecutive incoming tennis balls from the other side.
 The script below runs the simulation and renders the result online. The simulation will be reset after 300 frames. You can change the player by chaning`--cfg` to `djokovic` or `nadal`. 
@@ -69,10 +69,14 @@ The script below will run the simulations in batch and render the result videos 
 python vid2player/run.py --cfg federer_djokovic --rl_device cuda:0 --test --num_envs 8192 --episode_length 10000 --seed 0 --checkpoint latest --enable_shadow --headless --num_rec_frames 600 --num_eg 5 --record
 ```
 
+# Training with your motion
 
-# Retrain the high-level policy
-We also provide code for training the high-level policy using Federer's motion VAE. As described in the paper, we design a curriculum trained in three stages. You can run the following script to execute the curriculum training.
-The script assumes a GPU with memory >= 24GB and it takes about 2 days to finish on a single A5000.
+### Low-level policy
+We did not release the full training code for the low-level imitation policy, but [tennis_im.yaml](vid2player/cfg/im/tennis_im.yaml) and [humanoid_smpl_im_mvae.py](vid2player/env/tasks/humanoid_smpl_im_mvae.py) basically implement the environment except for the data loading and the overall training loop can be designed similar to that of the high-level policy, which is provided under [vid2player](vid2player).
+### Motion VAE
+We provide code for training the motion VAE. Please organize your motion data following the format described in [Video3DPoseDataset](vid2player/motion_vae/dataset.py).
+### High-level policy
+We also provide code for training the high-level policy. As described in the paper, we design a curriculum trained in three stages. You can run the following script to execute the curriculum training (assuming the checkpoints for the low-leve policy and motion VAE are available).
 ```
 python vid2player/run.py --cfg federer_train_stage_1 --rl_device cuda:0 --headless
 python vid2player/run.py --cfg federer_train_stage_2 --rl_device cuda:0 --headless
@@ -95,6 +99,12 @@ python vid2player/run.py --cfg federer_train_stage_3 --rl_device cuda:0 --headle
   keywords = {physics-based character animation, imitation learning, reinforcement learning},
 }
 ```
+
+# References
+This repository is built on top of the following repositories:
+* Low-level imitation policy is adapted from [EmbodiedPose](https://github.com/ZhengyiLuo/EmbodiedPose)
+* Motion VAE is adapted from [character-motion-vaes](https://github.com/electronicarts/character-motion-vaes) 
+
 
 # Contact
 For any question regarding this project, please contact Haotian Zhang via haotianz@nvidia.com.
