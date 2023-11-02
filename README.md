@@ -42,7 +42,7 @@ Download [data](https://drive.google.com/drive/folders/1kkM9tl1T3dXZbvh5oYHSerL0
 
 Download checkpoints of motion VAE and trained polices into `vid2player3d/results` (currently unavailable).
 
-Download SMPL [models](https://download.is.tue.mpg.de/download.php?domain=smpl&sfile=SMPL_python_v.1.0.0.zip) (male and female models) into `smpl_visualizer/data/smpl` after registering and rename the files as `SMPL_MALE.pkl` and `SMPL_FEMALE.pkl`.
+Download SMPL by first registering [here](https://smpl.is.tue.mpg.de/login.php) and then download the [models](https://download.is.tue.mpg.de/download.php?domain=smpl&sfile=SMPL_python_v.1.0.0.zip) (male and female models) into `smpl_visualizer/data/smpl` and rename the files as `SMPL_MALE.pkl` and `SMPL_FEMALE.pkl`.
 
 # Testing with trained models
 ### Single player
@@ -103,7 +103,16 @@ python vid2player/run.py --cfg federer_train_stage_3 --rl_device cuda:0 --headle
 # References
 This repository is built on top of the following repositories:
 * Low-level imitation policy is adapted from [EmbodiedPose](https://github.com/ZhengyiLuo/EmbodiedPose)
-* Motion VAE is adapted from [character-motion-vaes](https://github.com/electronicarts/character-motion-vaes) 
+* Motion VAE is adapted from [character-motion-vaes](https://github.com/electronicarts/character-motion-vaes)
+* RL environment in IsaacGym is adapted from [ASE](https://github.com/nv-tlabs/ASE/)
+  
+Here are additional references for reproducing the video annotation pipeline:
+* Player detection and tracking: [Yolo4](https://github.com/Tianxiaomo/pytorch-YOLOv4)
+* 2D Pose keypoint detection: [ViTPose](https://github.com/ViTAE-Transformer/ViTPose)
+* 3D Pose estimation and mesh recovery: [HybrIK](https://github.com/Jeff-sjtu/HybrIK)
+* 2D foot contact [detection](https://github.com/yul85/movingcam)
+* Global root trajectory optimization: [GLAMR](https://github.com/NVlabs/GLAMR)
+* Tennis court line [detection](https://github.com/gchlebus/tennis-court-detection)
 
 
 # Contact
