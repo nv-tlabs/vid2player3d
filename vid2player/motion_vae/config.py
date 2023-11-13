@@ -12,14 +12,8 @@ class MotionVAEOption(object):
     database_ratio = 1.0
 
     pose_feature = ['root_pos', 'root_velo', 'joint_rotmat', 'joint_pos', 'joint_velo']
-    condition_root_x_only = False
-    no_condition_root_y = False
     update_joint_pos = False
     predict_phase = False
-    include_phase_for_serve = False
-    include_phase_for_last_shot = False
-    filter_motion = False
-    sample_rules = {}
     
     # Network
     frame_size = None
@@ -35,7 +29,6 @@ class MotionVAEOption(object):
     model_base_ver = None
     nframes_seq = 10
     nseqs = 50000
-    nframes_seq_schedule = None
     curriculum_schedule = None
     mixed_phase_schedule = None
     weights = {'recon': 1, 'kl': 1, 'recon_phase': 10}
@@ -107,11 +100,9 @@ motion_vae_opt_dict = {
     'batch_size'                            : 100,
     'nseqs'                                 : 50000,
     'softmax_future'                        : True,
-    'include_phase_for_serve'               : True,
-    'filter_motion'                         : True,   
     'curriculum_schedule'                   : [0.1, 0.2],
     'mixed_phase_schedule'                  : [(0, 1), (0.5, 0.1)],
-    'weights'                               : {'recon': 1, 'kl': 0.4, 'recon_phase': 10},
+    'weights'                               : {'recon': 1, 'kl': 0.5, 'recon_phase': 10},
     'n_epochs'                              : 250,
     'n_epochs_decay'                        : 250,
     'save_freq_epoch'                       : 50,
@@ -127,7 +118,6 @@ motion_vae_opt_dict = {
     'model_ver'                             : 'nadal',
     'base_opt_ver'                          : 'federer',
     'player_name'                           : ['Nadal'],
-    'weights'                               : {'recon': 1, 'kl': 0.5, 'recon_phase': 10}   
 },
 
 }
