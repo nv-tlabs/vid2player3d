@@ -12,6 +12,11 @@ SIGGRAPH 2023 (best paper honorable mention)
 
 ### Note: the current release provides the implementation of the hierarchical controller, including the low-level imitation policy, motion embedding and the high-level planning policy, as well as the environment setup in IsaacGym. Unfortunately, the demo can NOT run because the trained models are currently not available due to license issues. 
 
+# News
+[2023/11/28] Training code for the low-level policy is released.
+
+[2023/11/01] Demo code for the hierarchical controller is released.
+
 # Environment setup
 
 ### 1. Download IsaacGym and create python virtual env
@@ -29,6 +34,7 @@ Enter the created virtual env and run the install script.
 conda activate rlgpu
 bash install.sh
 ```
+To install additional dependencies for the low-level policy, follow the instructions in [install_embodied_pose.sh](install_embodied_pose.sh). 
 
 ### 3. Install [smpl_visualizer](https://github.com/Haotianz94/smpl_visualizer) for visualizing results
 Git clone and then run 
@@ -43,6 +49,8 @@ Download [data](https://drive.google.com/drive/folders/1kkM9tl1T3dXZbvh5oYHSerL0
 Download checkpoints of motion VAE and trained polices into `vid2player3d/results` (currently unavailable).
 
 Download SMPL by first registering [here](https://smpl.is.tue.mpg.de/login.php) and then download the [models](https://download.is.tue.mpg.de/download.php?domain=smpl&sfile=SMPL_python_v.1.0.0.zip) (male and female models) into `smpl_visualizer/data/smpl` and rename the files as `SMPL_MALE.pkl` and `SMPL_FEMALE.pkl`.
+
+For training the low-level policy, also copy the smpl model files into `data/smpl`.
 
 # Testing with trained models
 ### Single player
@@ -72,11 +80,18 @@ python vid2player/run.py --cfg federer_djokovic --rl_device cuda:0 --test --num_
 # Training with your motion
 
 ### Low-level policy
-We did not release the full training code for the low-level imitation policy, but [tennis_im.yaml](vid2player/cfg/im/tennis_im.yaml) and [humanoid_smpl_im_mvae.py](vid2player/env/tasks/humanoid_smpl_im_mvae.py) basically implement the environment except for the data loading and the overall training loop can be designed similar to that of the high-level policy, which is provided under [vid2player](vid2player).
+We provide the code for training the low-level policy in [embodied_pose](embodied_pose). As described in the paper, the low-level policy is trained in two stages using AMASS motions and tennis motions. You can run the following script to execute the two-stage training (assuming the motion data are available).
+```
+python embodied_pose/run.py --cfg amass_im --rl_device cuda:0 --headless
+python embodied_pose/run.py --cfg djokovic_im --rl_device cuda:0 --headless
+```
+[convert_amass_isaac.py](uhc/utils/convert_amass_isaac.py) shows how to convert the AMASS motion dataset into the format that can be used for our training code.
+
 ### Motion VAE
 We provide code for training the motion VAE. Please organize your motion data following the format described in [Video3DPoseDataset](vid2player/motion_vae/dataset.py).
+
 ### High-level policy
-We also provide code for training the high-level policy. As described in the paper, we design a curriculum trained in three stages. You can run the following script to execute the curriculum training (assuming the checkpoints for the low-leve policy and motion VAE are available).
+We also provide code for training the high-level policy in [vid2player](vid2player). As described in the paper, we design a curriculum trained in three stages. You can run the following script to execute the curriculum training (assuming the checkpoints for the low-leve policy and motion VAE are available).
 ```
 python vid2player/run.py --cfg federer_train_stage_1 --rl_device cuda:0 --headless
 python vid2player/run.py --cfg federer_train_stage_2 --rl_device cuda:0 --headless

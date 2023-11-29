@@ -1,0 +1,143 @@
+name: HumanoidSMPLIM
+test_name: HumanoidSMPLIMVis
+env: 
+  numEnvs: 8192
+  envSpacing: 5
+  episodeLength: 300
+  isFlagrun: False
+  enableDebugVis: False
+  pdControl: True
+  powerScale: 1.0
+  controlFrequencyInv: 2
+  stateInit: "Hybrid"
+  hybridInitProb: 1.0
+  numAMPObsSteps: 10
+  enableHistObs: False
+  pd_use_ref_pos: True
+  localRootObs: True
+  keyBodies: ["R_Ankle", "L_Ankle", "L_Hand", "R_Hand"]
+  contactBodies: ["R_Ankle", "L_Ankle"]
+  terminationBodyHeight: -0.5
+  terminationHeadHeight: 1.0
+  enableEarlyTermination: True
+  motion_file: data/motion_lib/amass
+  residual_force_scale: 31.85
+  context_length: 32
+  context_padding: 8
+
+  asset:
+    assetRoot: embodied_pose/data/assets
+    assetFileName: mjcf/smpl_mesh_humanoid_amass_v1.xml
+
+  plane:
+    staticFriction: 1.0
+    dynamicFriction: 1.0
+    restitution: 0.0
+
+sim:
+  substeps: 2
+  physx:
+    num_threads: 4
+    solver_type: 1
+    num_position_iterations: 4
+    num_velocity_iterations: 0
+    contact_offset: 0.02
+    rest_offset: 0.0
+    bounce_threshold_velocity: 0.2
+    max_depenetration_velocity: 10.0
+    default_buffer_size_multiplier: 10.0
+
+  flex:
+    num_inner_iterations: 10
+    warm_start: 0.25
+
+
+params:
+  seed: 7
+
+  algo:
+    name: pose_im_rnn
+
+  model:
+    name: pose_im
+
+  network:
+    name: pose_im_rnn
+    separate: True
+    actor_net_type: 'style_cat1'
+    latent_type: 'sphere'
+    use_running_obs: True
+    running_obs_type: ours
+
+    context_padding: 8
+
+    space:
+      continuous:
+        mu_activation: None
+        sigma_activation: None
+        mu_init:
+          name: default
+        sigma_init:
+          name: const_initializer
+          val: -1.756
+        fixed_sigma: True
+        learn_sigma: False
+
+    mlp:
+      units: [1024, 1024, 512]
+      activation: relu
+      d2rl: False
+
+      initializer:
+        name: default
+      regularizer:
+        name: None
+
+    disc:
+      units: [1024, 1024, 512]
+      activation: relu
+
+      initializer:
+        name: default
+
+    enc:
+      units: [1024, 512]
+      activation: relu
+      separate: False
+
+      initializer:
+        name: default
+
+  load_checkpoint: False
+
+  config:
+    name: Humanoid
+    env_name: rlgpu
+    multi_gpu: False
+    ppo: True
+    mixed_precision: False
+    normalize_input: False
+    normalize_value: True
+    reward_shaper:
+      scale_value: 1
+    normalize_advantage: True
+    gamma: 0.99
+    tau: 0.95
+    learning_rate: 2e-5
+    lr_schedule: constant
+    score_to_win: 20000
+    max_epochs: 10000
+    save_best_after: 50
+    save_frequency: 200
+    print_stats: True
+    entropy_coef: 0.0
+    truncate_grads: True
+    grad_norm: 50.0
+    e_clip: 0.2
+    horizon_length: 32
+    minibatch_size: 512
+    mini_epochs: 6
+    critic_coef: 5
+    clip_value: False
+    seq_len: 4
+    clip_actions: False
