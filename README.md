@@ -46,13 +46,14 @@ bash install.sh
 
 Download [data](https://drive.google.com/drive/folders/1kkM9tl1T3dXZbvh5oYHSerL0JkgaL1Mi?usp=sharing) into `vid2player3d/data`.
 
-Download checkpoints of motion VAE and trained polices into `vid2player3d/results` (currently unavailable).
+Download checkpoints of motion embedding and trained polices into `vid2player3d/results` (currently unavailable).
 
 Download SMPL by first registering [here](https://smpl.is.tue.mpg.de/login.php) and then download the [models](https://download.is.tue.mpg.de/download.php?domain=smpl&sfile=SMPL_python_v.1.0.0.zip) (male and female models) into `smpl_visualizer/data/smpl` and rename the files as `SMPL_MALE.pkl` and `SMPL_FEMALE.pkl`.
 
-For training the low-level policy, also copy the smpl model files into `data/smpl`.
+For training the low-level policy, also copy the smpl model files into `vid2player3d/data/smpl`.
 
-# Testing with trained models
+# Demo
+These demos require trained models which are currently unavailable.
 ### Single player
 In the single player setting, the player will react to consecutive incoming tennis balls from the other side.
 The script below runs the simulation and renders the result online. The simulation will be reset after 300 frames. You can change the player by chaning`--cfg` to `djokovic` or `nadal`. 
@@ -77,7 +78,7 @@ The script below will run the simulations in batch and render the result videos 
 python vid2player/run.py --cfg federer_djokovic --rl_device cuda:0 --test --num_envs 8192 --episode_length 10000 --seed 0 --checkpoint latest --enable_shadow --headless --num_rec_frames 600 --num_eg 5 --record
 ```
 
-# Training with your motion
+# Training
 
 ### Low-level policy
 We provide the code for training the low-level policy in [embodied_pose](embodied_pose). As described in the paper, the low-level policy is trained in two stages using AMASS motions and tennis motions. You can run the following script to execute the two-stage training (assuming the motion data are available).
@@ -87,11 +88,11 @@ python embodied_pose/run.py --cfg djokovic_im --rl_device cuda:0 --headless
 ```
 [convert_amass_isaac.py](uhc/utils/convert_amass_isaac.py) shows how to convert the AMASS motion dataset into the format that can be used for our training code.
 
-### Motion VAE
-We provide code for training the motion VAE. Please organize your motion data following the format described in [Video3DPoseDataset](vid2player/motion_vae/dataset.py).
+### Motion embedding
+We provide code for training the motion embedding in [vid2player/motion_vae](vid2player/motion_vae/) (assuming the motion data is organized in the format described in [Video3DPoseDataset](vid2player/motion_vae/dataset.py)).
 
 ### High-level policy
-We also provide code for training the high-level policy in [vid2player](vid2player). As described in the paper, we design a curriculum trained in three stages. You can run the following script to execute the curriculum training (assuming the checkpoints for the low-leve policy and motion VAE are available).
+We also provide code for training the high-level policy in [vid2player](vid2player). As described in the paper, we design a curriculum trained in three stages. You can run the following script to execute the curriculum training (assuming the checkpoints for the low-leve policy and motion embedding are available).
 ```
 python vid2player/run.py --cfg federer_train_stage_1 --rl_device cuda:0 --headless
 python vid2player/run.py --cfg federer_train_stage_2 --rl_device cuda:0 --headless
@@ -118,7 +119,7 @@ python vid2player/run.py --cfg federer_train_stage_3 --rl_device cuda:0 --headle
 # References
 This repository is built on top of the following repositories:
 * Low-level imitation policy is adapted from [EmbodiedPose](https://github.com/ZhengyiLuo/EmbodiedPose)
-* Motion VAE is adapted from [character-motion-vaes](https://github.com/electronicarts/character-motion-vaes)
+* Motion embedding is adapted from [character-motion-vaes](https://github.com/electronicarts/character-motion-vaes)
 * RL environment in IsaacGym is adapted from [ASE](https://github.com/nv-tlabs/ASE/)
   
 Here are additional references for reproducing the video annotation pipeline:
