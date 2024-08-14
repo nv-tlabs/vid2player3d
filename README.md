@@ -44,7 +44,7 @@ bash install.sh
 
 ### 4. Download data/checkpoints
 
-Download [data](https://drive.google.com/drive/folders/1kkM9tl1T3dXZbvh5oYHSerL0JkgaL1Mi?usp=sharing) into `vid2player3d/data`.
+Download [data](https://drive.google.com/drive/folders/1zuDOJWtjjGOL5ZWPlErv39ORfg0NEi_s?usp=sharing) into `vid2player3d/data`.
 
 Download checkpoints of motion embedding and trained polices into `vid2player3d/results` (currently unavailable).
 
