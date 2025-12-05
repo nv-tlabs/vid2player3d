@@ -10,7 +10,7 @@ SIGGRAPH 2023 (best paper honorable mention)
 
 <img src="doc/teaser.png"/>
 
-### Note: the current release provides the implementation of the hierarchical controller, including the low-level imitation policy, motion embedding and the high-level planning policy, as well as the environment setup in IsaacGym. Unfortunately, the demo can NOT run because the trained models are currently not available due to license issues. 
+### Note: the current release provides the implementation of the hierarchical controller, including the low-level imitation policy, motion embedding and the high-level planning policy, as well as the environment setup in IsaacGym. Unfortunately, the demo can NOT run because the trained models are currently not available due to license issues of the video footage we used. 
 
 # News
 [2023/11/28] Training code for the low-level policy is released.
